@@ -1,92 +1,40 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-from enum import Enum
-import gpiozero
+import motors
+import sensors
+from time import time
+from timeit import default_timer
+
+leftMotor = motors.MotorWithEncoder(DIR_pin=22, PWM_pin=17, ENC_pin=4)
+rightMotor = motors.MotorWithEncoder(DIR_pin=23, PWM_pin=18, ENC_pin=26)
+
+transducer = sensors.Transducer()
+
+last_time = time()
 
 
-track = list()
-rotate = list()
-
-class ProgramState(Enum):
-    START = 1
-    RUNNING = 2
-
-
-# TODO: make this into a real app
-def user_interface(program_state=ProgramState.RUNNING):
-    if program_state == ProgramState.START:
-        introduction = "This program will allow you to control the Donkey. \n" \
-                       "You can command robot to move forward by typing the distance, you want the robot to travel. \n" \
-                       "If You wish to change the direction type: \n" \
-                       "R - to turn right \n" \
-                       "L - to turn left \n" \
-                       "T - to turn back \n" \
-                       "F - to finish giving the commands \n\n"
-
-        print(introduction)
-
-
-    user_input = list()
+try:
     while True:
-        command = input(">")
-        if command == 'F':
-            break
+        leftMotor.run(speed=20,direction='F')
+        rightMotor.run(speed=20,direction='F')
 
-        # translacja na wartość kąta obrotu i odległość
-        # robiona głównie dla ułatwienia późniejszego preprocessingu
-        if command == 'R':
-            command = '-90'
-        elif command == 'L':
-            command = '90'
-        elif command == 'T':
-            command = '180'
-        else:
-            command = int(command)
+        leftMotor.measure_distance()
+        rightMotor.measure_distance()
 
-        user_input.append(command)
+        current_time = time()
+        
+        if current_time - last_time > 5:
+            last_time = current_time
 
-    return user_input
+            print("\n\n1: ",end=" ")
+            leftMotor.get_distance(do_print=True)
 
-
-def preprocessing(user_input):
-    global track
-    global rotate
-
-    for i in range(len(user_input)):
-        if type(user_input[i]) is int:
-            if type(user_input[i]) == type(user_input[i-1]) and i != 0:
-                track[-1] += user_input[i]
-            else:
-                track.append(user_input[i])
-        else:
-            if type(user_input[i]) == type(user_input[i - 1]) and i != 0:
-                rotate[-1] += int(user_input[i])
-            else:
-                rotate.append(int(user_input[i]))
-
-
-def setup():
-    global track
-    global rotate
-
-    user_intput = user_interface(ProgramState.START)
-    preprocessing(user_intput)
-
-    # FIXME: usunąć te 2 linijki - są tylko do podglądu wyników preprocessingu
-    print("Track: ", track)
-    print("Rotate: ", rotate)
-
-    return
-
-
-def loop():
-    global track
-    global rotate
-    return
+            print("2: ",end=" ")
+            rightMotor.get_distance(do_print=True)
 
 
 
-setup()
+except KeyboardInterrupt:
+    leftMotor.stop()
+    rightMotor.stop()
 
-# while True:
-#     loop()
+
+
