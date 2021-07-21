@@ -11,11 +11,11 @@ class Transducer:
     def __init__(self, device=0):
         spi.open(0, device)
         spi.max_speed_hz=1000000
-    
+
  
     def read_channel(self, channel):
-        val = spi.xfer2([1,(8+channel)<<4,0])
-        data = ((val[1]&3) << 8) + val[2]
+        val = spi.xfer2([1, (8 + channel) << 4, 0])
+        data = ((val[1] & 3) << 8) + val[2]
         return data
 
     def get_distance(self, channel, do_print=False):
@@ -25,11 +25,19 @@ class Transducer:
             print(f'Distance to obstacle: {dist} cm.\n')
         return dist
 
+    def get_all_distances(self):
+        distances = list()
+        for channel in range(7 + 1):
+            v = self.read_channel(channel)
+            dist = 100.6336 * v ** 4 - 488.2443 * v ** 3 + 886.4260 * v ** 2 - 727.2917 * v + 244.9170
+            distances.append(dist)
+        return distances
+
     # FIXME: function only reads and computes mean     
     def pseudo_calibrate(self, repeat=10, margin=0.05):
         values = list()
         for i in range(repeat): 
-            v=(self.readChannel(0)/1023.0)*3.3
+            v = (self.read_channel(0)/1023.0)*3.3
             values.append(v)
         
         values = np.array(values)

@@ -27,6 +27,7 @@ class MotorWithEncoder:
             self.rotationCount = 0
             self.stateCount = 0
             self.stateCountTotal = 0
+            self.distance = 0
 
         if ENC_pin is None:
             raise Warning('Warning! You have to specify encoder channel.')
@@ -48,6 +49,7 @@ class MotorWithEncoder:
             raise ValueError('Speed is not between <0, 100>.')
         
         self.PWM.start(speed)
+        self.measure_distance()
 
     def measure_distance(self):
         self.stateCurrent = io.input(self.ENC_pin)
@@ -60,15 +62,25 @@ class MotorWithEncoder:
             self.rotationCount += 1
             self.stateCount = 0
 
-    def get_distance(self, do_print=True):
-        distance = self.distancePerStep * self.stateCountTotal
-        if do_print:
-            print(f'Distance = {distance} mm.')
+        self.distance = self.distancePerStep * self.stateCountTotal
 
-        return distance
+    def reset_measurement(self):
+        self.stateLast = io.input(self.ENC_pin)
+        self.rotationCount = 0
+        self.stateCount = 0
+        self.stateCountTotal = 0
+        self.distance = 0
+
+    def get_distance(self, do_print=True):
+        if do_print:
+            print(f'Distance = {self.distance} mm.')
+
+        return self.distance
 
     def stop(self):
         self.PWM.start(0) 
+
+    def shutdown(self): #FIXME: Might be static?
         io.cleanup()
 
     
