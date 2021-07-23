@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 from enum import Enum
+from typing import Optional, Union
 
 import motors
 import sensors
@@ -17,6 +18,11 @@ class SensorPosition(Enum):
     FRONT_RIGHT = 2
     RIGHT = 4
 
+class Rotation(Enum):
+    RIGHT = -90
+    LEFT = 90
+    TURN_BACK = 180
+
 class Donkey:
     def __init__(self):
         #Motors
@@ -28,20 +34,61 @@ class Donkey:
 
         #Path
         self.trace = list()
-        self.rotate = list()
+        self.angles = list()
+
+        self.deviation = 0
 
     def learn_path(self):
         user_input = self.read_commands(ProgramState.START)
         self.preprocessing(user_input)
 
     def traverse_path(self, speed=50):
-        while self.transducer.get_distance(channel=SensorPosition.FRONT) > 30: #FIXME: CZY 30 cm na pewno?
-            self.run(speed)
-            self.trace[0] -= 
 
+        while len(self.trace) > 0 or len(self.angles) > 0:
+            flag_different_course_correction = False
 
+            while self.transducer.get_distance(channel=SensorPosition.FRONT) > 30: #FIXME: CZY 30 cm na pewno?
+                self.run(speed)
+                if self.trace[0] < self.left_motor.distance:
+                    self.trace.pop(0)
+                    self.rotate(self.angles[0])
+                    self.angles.pop(0)
 
-    def rotate(self, angle=90, speed=20):
+            self.trace[0] -= self.left_motor.distance
+            # zbędne, bo w while jest rotate
+            # self.left_motor.reset_measurement()
+            while not (self.transducer.get_distance(channel=SensorPosition.FRONT) > 30):
+                self.stop()
+                self.rotate(Rotation.LEFT)
+
+                while self.transducer.get_distance(channel=SensorPosition.RIGHT) < 30:
+                    self.run(speed)
+                    self.deviation = self.left_motor.distance
+
+                self.rotate(Rotation.RIGHT)
+
+                while self.transducer.get_distance(channel=SensorPosition.RIGHT) < 30:
+                    self.run(speed)
+
+                    # obsluzenie sytuacji gdy przeszkoda stoi na 'zakrecie'
+                    if self.trace[0] < self.left_motor.distance:
+                        self.trace.pop(0)
+                        if self.angles[0] == Rotation.LEFT:
+                            self.trace[0] -= self.deviation
+                        elif self.angles[0] == Rotation.RIGHT:
+                            self.trace[0] += self.deviation
+                        self.rotate(self.angles[0])
+                        self.angles.pop(0)
+                        flag_different_course_correction = True
+
+            if not flag_different_course_correction:
+                self.rotate(Rotation.RIGHT)
+                while self.deviation > self.left_motor.distance:
+                    self.run(speed)
+                self.rotate(Rotation.LEFT)
+                self.deviation = 0
+
+    def rotate(self, angle: Union[Rotation, int] = 90, speed=20):
         #TODO: na razie bierzemy średnicę jakąś losową, trzeba zmierzyć
 
         d = 261
@@ -112,6 +159,6 @@ class Donkey:
                     self.trace.append(user_input[i])
             else:
                 if type(user_input[i]) == type(user_input[i - 1]) and i != 0:
-                    self.rotate[-1] += int(user_input[i])
+                    self.angles[-1] += int(user_input[i])
                 else:
-                    self.rotate.append(int(user_input[i]))
+                    self.angles.append(int(user_input[i]))
