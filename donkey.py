@@ -1,7 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-from enum import Enum
+from enum import Enum, IntEnum
 from typing import Optional, Union
+import paho.mqtt.client as mqtt
+import time
 
 import motors
 import sensors
@@ -11,14 +13,14 @@ class ProgramState(Enum):
     START = 1
     RUNNING = 2
 
-class SensorPosition(Enum):
+class SensorPosition(IntEnum):
     FRONT = 0
     FRONT_LEFT = 1
     LEFT = 3
     FRONT_RIGHT = 2
     RIGHT = 4
 
-class Rotation(Enum):
+class Rotation(IntEnum):
     RIGHT = -90
     LEFT = 90
     TURN_BACK = 180
@@ -33,10 +35,53 @@ class Donkey:
         self.transducer = sensors.Transducer(device=0)
 
         #Path
+        self.user_input = list()
+
         self.trace = list()
         self.angles = list()
 
         self.deviation = 0
+
+    def listen(self):
+
+        print('Listening...')
+
+        def on_message(client, userdata, message):
+
+            msg = message.payload.decode("utf-8")
+
+            if msg == 'START':
+                self.user_input = list()
+
+            elif msg == 'STOP':
+                client.loop_stop()
+                print(self.user_input)
+                print('Bye!')
+
+            else:
+                if msg == 'R':
+                    msg = '-90'
+                elif msg == 'L':
+                    msg = '90'
+                elif msg == 'T':
+                    msg = '180'
+                else:
+                    msg = int(msg)
+
+                self.user_input.append(msg)
+
+            print("Received message: ", str(message.payload.decode("utf-8")))
+
+        mqttBroker = "192.168.1.113"
+        client = mqtt.Client("Donkey")
+        client.connect(mqttBroker)
+
+        client.loop_start()
+        client.subscribe("COMMANDS")
+        client.on_message = on_message
+        time.sleep(30)
+        client.loop_stop()
+        
 
     def learn_path(self):
         user_input = self.read_commands(ProgramState.START)
@@ -59,6 +104,7 @@ class Donkey:
             # self.left_motor.reset_measurement()
             while not (self.transducer.get_distance(channel=SensorPosition.FRONT) > 30):
                 self.stop()
+                time.sleep(2)
                 self.rotate(Rotation.LEFT)
 
                 while self.transducer.get_distance(channel=SensorPosition.RIGHT) < 30:
@@ -150,15 +196,19 @@ class Donkey:
 
         return user_input
 
-    def preprocessing(self, user_input):
-        for i in range(len(user_input)):
-            if type(user_input[i]) is int:
-                if type(user_input[i]) == type(user_input[i - 1]) and i != 0:
-                    self.trace[-1] += user_input[i]
+    def preprocessing(self):
+        print("Preprocessing Your commands...")
+
+        for i in range(len(self.user_input)):
+            if type(self.user_input[i]) is int:
+                if type(self.user_input[i]) == type(self.user_input[i - 1]) and i != 0:
+                    self.trace[-1] += self.user_input[i]
                 else:
-                    self.trace.append(user_input[i])
+                    self.trace.append(self.user_input[i])
             else:
-                if type(user_input[i]) == type(user_input[i - 1]) and i != 0:
-                    self.angles[-1] += int(user_input[i])
+                if type(self.user_input[i]) == type(self.user_input[i - 1]) and i != 0:
+                    self.angles[-1] += int(self.user_input[i])
                 else:
-                    self.angles.append(int(user_input[i]))
+                    self.angles.append(int(self.user_input[i]))
+
+        print("Preprocessing finished.")
