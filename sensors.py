@@ -28,9 +28,7 @@ class Transducer:
     def get_all_distances(self):
         distances = list()
         for channel in range(7 + 1):
-            v = self.read_channel(channel)
-            dist = 100.6336 * v ** 4 - 488.2443 * v ** 3 + 886.4260 * v ** 2 - 727.2917 * v + 244.9170
-            distances.append(dist)
+            distances.append(self.get_distance(channel))
         return distances
 
     # FIXME: function only reads and computes mean     

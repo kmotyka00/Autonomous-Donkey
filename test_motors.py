@@ -30,7 +30,17 @@ try:
             print("2: ", end=" ")
             rightMotor.get_distance(do_print=True)
 
+            distances = transducer.get_all_distances()
+            print(distances)
+            print('FRONT SENSOR: ', end=" ")
+            print(distances[0])
 
+            print('LEFT SENSOR: ', end=" ")
+
+            print(distances[3])
+
+            print('RIGHT SENSOR: ', end=" ")
+            print(distances[4])
 
 except KeyboardInterrupt:
     leftMotor.stop()

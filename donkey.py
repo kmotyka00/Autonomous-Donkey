@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-from enum import Enum, IntEnum
+from enum import Enum, IntEnum, Flag
 from typing import Optional, Union
 import paho.mqtt.client as mqtt
 import time
@@ -8,6 +8,8 @@ import time
 import motors
 import sensors
 import math
+
+import os
 
 class ProgramState(Enum):
     START = 1
@@ -35,26 +37,35 @@ class Donkey:
         self.transducer = sensors.Transducer(device=0)
 
         #Path
-        self.user_input = list()
+        #self.user_input = list()
+        self.user_input = [100000, 1000000, '90', 10000000, '-90']
 
         self.trace = list()
         self.angles = list()
 
         self.deviation = 0
 
-    def listen(self):
+        self.flags = {
+            'LISTENING': True
+        }
 
+    def listen(self):
+        
+        # os.system('mosquitto')
+        # os.system('exit')
         print('Listening...')
+
 
         def on_message(client, userdata, message):
 
             msg = message.payload.decode("utf-8")
 
             if msg == 'START':
+                self.flags['LISTENING'] = True
                 self.user_input = list()
 
             elif msg == 'STOP':
-                client.loop_stop()
+                self.flags['LISTENING'] = False
                 print(self.user_input)
                 print('Bye!')
 
@@ -74,21 +85,24 @@ class Donkey:
 
         mqttBroker = "192.168.1.113"
         client = mqtt.Client("Donkey")
+        #client.username_pw_set("login", "pass")
+        client.on_message = on_message
         client.connect(mqttBroker)
 
         client.loop_start()
         client.subscribe("COMMANDS")
-        client.on_message = on_message
-        time.sleep(30)
-        client.loop_stop()
         
+        while self.flags['LISTENING'] is True: # while loop to keep script alive
+            pass
+
+        client.loop_stop()
 
     def learn_path(self):
         user_input = self.read_commands(ProgramState.START)
         self.preprocessing(user_input)
 
     def traverse_path(self, speed=50):
-
+        
         while len(self.trace) > 0 or len(self.angles) > 0:
             flag_different_course_correction = False
 
@@ -138,7 +152,7 @@ class Donkey:
         #TODO: na razie bierzemy średnicę jakąś losową, trzeba zmierzyć
 
         d = 261
-        rotate_distance = math.pi * d * angle / 360.0
+        rotate_distance = math.pi * d * abs(angle) / 360.0
 
         if angle > 0:
             left_motor_direction = 'B'
@@ -150,18 +164,30 @@ class Donkey:
         self.left_motor.reset_measurement()
 
         while rotate_distance > self.left_motor.distance:
+            # print(self.left_motor.distance)
             self.left_motor.run(speed, left_motor_direction)
             self.right_motor.run(speed, right_motor_direction)
 
         self.left_motor.reset_measurement()
 
-    def run(self, speed, direction='F'):
+    def run(self, speed=50, direction='F'):
         self.left_motor.run(speed, direction)
         self.right_motor.run(speed, direction)
+            
+    def go(self, distance=500, speed=50):
+        while distance > self.left_motor.distance:
+            self.run(speed=speed)
+            print(self.right_motor.distance)
+        self.stop()
+            
 
     def stop(self):
         self.left_motor.stop()
         self.right_motor.stop()
+
+    def reset_distance(self):
+        self.left_motor.reset_measurement()
+        self.right_motor.reset_measurement()
 
     def read_commands(self, program_state=ProgramState.RUNNING):
         if program_state == ProgramState.START:
@@ -211,4 +237,6 @@ class Donkey:
                 else:
                     self.angles.append(int(self.user_input[i]))
 
+        print('Trace: ', self.trace)
+        print('Angles: ', self.angles)
         print("Preprocessing finished.")

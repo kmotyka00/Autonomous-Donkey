@@ -34,8 +34,9 @@ class MotorWithEncoder:
 
         # TODO: zmierzy dokladnie z opona
         self.circ = circ #mm
+        self.gearRatio = 18.75
         self.statesPerRotation = statesPerRotation
-        self.distancePerStep = circ / statesPerRotation
+        self.distancePerStep = circ / statesPerRotation / self.gearRatio
 
     def run(self, speed=0, direction='F'):
         if direction == 'F':
@@ -78,7 +79,8 @@ class MotorWithEncoder:
         return self.distance
 
     def stop(self):
-        self.PWM.start(0) 
+        self.PWM.start(0)
+
 
     def shutdown(self): #FIXME: Might be static?
         io.cleanup()
