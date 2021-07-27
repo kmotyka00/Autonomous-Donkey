@@ -2,6 +2,7 @@ import paho.mqtt.client as mqtt
 from random import randrange, uniform
 import time
 from enum import Enum
+import os
 
 mqttBroker = "192.168.1.113"
 client = mqtt.Client("User")
@@ -31,24 +32,34 @@ def user_interface(program_state=ProgramState.START):
     time.sleep(1)
 
     while True:
-        command = input(">")
+        try:
+            command = input(">")
+
+            if command not in ['R', 'L', 'T', 'F', 'STOP']:
+                # sprawdza czy input jest liczbą
+                try:
+                    int(command)
+                except:
+                    raise ValueError(f"Invalid command. You entered '{command}'. Command can be only an int() number or R, L, T, F")
+
         
+            if command == 'F':
+                command = 'STOP'  
 
-        # translacja na wartość kąta obrotu i odległość
-        # robiona głównie dla ułatwienia późniejszego preprocessingu
-        if command == 'F':
-            command = 'STOP'  
+            # user_input.append(command)
+            client.publish("COMMANDS", command)
+            print("Just published " + str(command) + " to Topic COMMANDS")
+            time.sleep(1)
 
-        # user_input.append(command)
-        client.publish("COMMANDS", command)
-        print("Just published " + str(command) + " to Topic COMMANDS")
-        time.sleep(1)
+            if command == 'STOP':
+                break
 
-        if command == 'F':
-            break
+        except ValueError as input_exeption_msg:
+            print(input_exeption_msg)
 
 
 user_interface()
+# 1345os.system('kill SIGINT2')
 # message = user_interface()
 # client.publish("TEMPERATURE", message)
 # print("Just published " + str(message) + " to Topic TEMPERATURE")
