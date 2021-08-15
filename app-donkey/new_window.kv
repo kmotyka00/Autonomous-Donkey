@@ -45,6 +45,12 @@ WindowManager:
                     root.manager.transition.direction = 'left'
 
             Button:
+                text: 'Default Path'
+                on_release:
+                    root.travel_default_path(root)
+
+
+            Button:
                 text: 'About Donkey'
                 on_release:
                     app.root.current = 'aboutdonkey'

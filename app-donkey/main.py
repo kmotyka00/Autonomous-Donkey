@@ -5,9 +5,54 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.widget import Widget
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.properties import ObjectProperty
+import paho.mqtt.client as mqtt
+
+def split_and_send(final_path):
+    print(final_path)
+    # Delete Path:
+    final_path = final_path[6:]
+    print(type(final_path))
+
+    # Change to list
+    final_path = final_path.split(sep=',')
+    print(final_path)
+    final_path = final_path[:-1]
+    print(final_path)
+
+    for i in range(len(final_path)):
+        final_path[i] = final_path[i][1:]
+    print(final_path)
+
+    # setup client and broker
+    # mqttBroker = "192.168.1.113"
+    mqttBroker = "mqtt.eclipseprojects.io"
+    client = mqtt.Client("User")
+    client.connect(mqttBroker)
+
+    # send START command - it's necessaery due to
+    # design of functions in robot
+    command = "START"
+    client.publish("COMMANDS", command)
+    print(str(command) + " command has been send")
+
+    for command in final_path:
+        command = command.split(sep=' ')[1]
+        client.publish("COMMANDS", command)
+        print("Just published " + str(command) + " to Topic COMMANDS")
+
+    command = "STOP"
+    client.publish("COMMANDS", command)
+    print(str(command) + " command has been send")
+
 
 class MainWindow(Screen):
-    pass
+    def travel_default_path(self, root):
+        default_path = 'Path:  Move 420, Rotate L, Move 333, Move 333,' \
+                             ' Rotate R, Rotate R, Move 100, Move 420, Rotate L, '
+
+        split_and_send(default_path)
+
 
 class LearnPath(Screen):
     pass
@@ -54,22 +99,10 @@ class Calculator(BoxLayout):
 
     def start_travelling(self, root):
         final_path = root.ids.path.text
-        print(final_path)
-        #Delete Path:
-        final_path = final_path[6:]
-        print(final_path)
+        split_and_send(final_path)
 
-        #Change to list
-        final_path = final_path.split(sep=',')
-        print(final_path)
-        final_path = final_path[:-1]
-        print(final_path)
 
-        for i in range(len(final_path)):
-            final_path[i] = final_path[i][1:]
-        print(final_path)
 
-        
 
 class WindowManager(ScreenManager):
     pass
