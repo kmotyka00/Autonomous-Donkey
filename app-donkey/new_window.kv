@@ -1,0 +1,353 @@
+WindowManager:
+    MainWindow:
+    LearnPath:
+    AboutDonkey:
+    ChoosePath:
+
+<Button>
+    font_size: 32
+    font_name: 'fonts/Lcd.ttf'
+    font_size: '40dp'
+    color: 1, .5, 1, 1
+
+<Label>
+    font_size: 32
+    font_name: 'fonts/Lcd.ttf'
+    font_size: '40dp'
+    color: 1, .5, 1, 1
+
+<MainWindow>:
+    name: 'menu'
+
+    GridLayout:
+
+        #orientation: 'vertical'
+        #size: root.width, root.height
+        cols: 2
+
+        BoxLayout:
+            orientation: 'vertical'
+            Image:
+                source: 'donkey2.png'
+            Label:
+                text: 'Autonomous Donkey'
+                font_name: 'fonts/Lcd.ttf'
+                font_size: '40dp'
+                color: 1, .5, 1, 1
+
+        BoxLayout:
+            orientation: 'vertical'
+
+            Button:
+                text: 'Teach Path'
+                on_release:
+                    app.root.current = 'learnpath'
+                    root.manager.transition.direction = 'left'
+
+            Button:
+                text: 'Default Path'
+                on_release:
+                    root.travel_default_path(root)
+
+
+            Button:
+                text: 'About Donkey'
+                on_release:
+                    app.root.current = 'aboutdonkey'
+                    root.manager.transition.direction = 'left'
+
+            Button:
+                id: btnExit
+                text: 'Exit'
+                on_press: app.stop()
+
+
+<WidgetLearnPath>:
+    cols: 2
+
+
+<LearnPath>:
+    name: 'learnpath'
+
+    GridLayout:
+        cols: 1
+
+        GridLayout:
+            cols: 1
+            size_hint: (1, 1)
+            #height: '200dp'
+            Label:
+                font_size: 30
+                text_size: self.size
+                halign: 'center'
+                valign: 'middle'
+                color: '#bdb2ff'
+                text: 'Set the speed of your donkey.\n But be careful!\n The whole path will be traveled with the same speed.'
+
+
+        GridLayout:
+            cols: 2
+            Label:
+                size_hint: (None, 1)
+                width: root.width/2
+                text: 'Velocity'
+                font_size: '25dp'
+
+            BoxLayout:
+                Slider:
+                    id: my_slider
+                    min: 0
+                    max: 100
+                    value: 50
+                    orientation: 'horizontal'
+                    color: (1, 1, 1, 1)
+                Label:
+                    text: str(int(my_slider.value))
+                    font_size: '40dp'
+
+        GridLayout:
+            cols: 1
+            size_hint: (1, 1)
+            #height: '200dp'
+
+            Button:
+                text: 'Go Next'
+                on_release:
+                    app.root.current = 'choosepath'
+                    root.manager.transition.direction = 'left'
+            Button:
+                text: 'Go Back'
+                on_release:
+                    app.root.current = 'menu'
+                    root.manager.transition.direction = 'right'
+
+
+<Calculator>:
+    BoxLayout:
+        orientation: 'horizontal'
+
+        BoxLayout:
+            orientation: 'vertical'
+            size: root.width, root.height
+
+            TextInput:
+                id: calc_input
+                text: '0'
+                halign: 'right'
+                font_size: 32
+                font_name: 'fonts/Lcd.ttf'
+                font_size: '40dp'
+                size_hint: (1, .15)
+
+            GridLayout:
+                cols: 4
+                rows: 4
+
+
+                Button:
+                    size_hint: (.2, .2)
+                    font_size: 25
+                    text: '1'
+                    background_color: (157/255, 157/255, 157/255, 1)
+                    on_press: root.number_button_press(1)
+
+                Button:
+                    size_hint: (.2, .2)
+                    font_size: 25
+                    text: '2'
+                    background_color: (157/255, 157/255, 157/255, 1)
+                    on_press: root.number_button_press(2)
+
+                Button:
+                    size_hint: (.2, .2)
+                    font_size: 25
+                    text: '3'
+                    background_color: (157/255, 157/255, 157/255, 1)
+                    on_press: root.number_button_press(3)
+
+                Button:
+                    id: clear
+                    size_hint: (.2, .2)
+                    font_size: 25
+                    text: 'Clear'
+                    background_color: (157/255, 157/255, 157/255, 1)
+                    on_press: root.clear()
+
+                Button:
+                    size_hint: (.2, .2)
+                    font_size: 25
+                    text: '4'
+                    background_color: (157/255, 157/255, 157/255, 1)
+                    on_press: root.number_button_press(4)
+
+                Button:
+                    size_hint: (.2, .2)
+                    font_size: 25
+                    text: '5'
+                    background_color: (157/255, 157/255, 157/255, 1)
+                    on_press: root.number_button_press(5)
+
+                Button:
+                    size_hint: (.2, .2)
+                    font_size: 25
+                    text: '6'
+                    background_color: (157/255, 157/255, 157/255, 1)
+                    on_press: root.number_button_press(6)
+
+                Button:
+                    id: backspace
+                    size_hint: (.2, .2)
+                    font_size: 25
+                    text: 'Back'
+                    background_color: (157/255, 157/255, 157/255, 1)
+                    on_press: root.remove()
+
+                Button:
+                    size_hint: (.2, .2)
+                    font_size: 25
+                    text: '7'
+                    background_color: (157/255, 157/255, 157/255, 1)
+                    on_press: root.number_button_press(7)
+
+                Button:
+                    size_hint: (.2, .2)
+                    font_size: 25
+                    text: '8'
+                    background_color: (157/255, 157/255, 157/255, 1)
+                    on_press: root.number_button_press(8)
+
+                Button:
+                    size_hint: (.2, .2)
+                    font_size: 25
+                    text: '9'
+                    background_color: (157/255, 157/255, 157/255, 1)
+                    on_press: root.number_button_press(9)
+
+                Button:
+                    size_hint: (.2, .2)
+                    font_size: 21
+                    text: 'Send Dist'
+                    background_color: (157/255, 157/255, 157/255, 1)
+                    color: (0, 1, 0, 1)
+                    on_press: root.send_msg(root, 'move')
+
+                Button:
+                    size_hint: (.2, .2)
+                    font_size: 25
+                    text: 'Left'
+                    background_color: (157/255, 157/255, 157/255, 1)
+                    on_press: root.rotation_button('L')
+
+                Button:
+                    size_hint: (.2, .2)
+                    font_size: 25
+                    text: '0'
+                    background_color: (157/255, 157/255, 157/255, 1)
+                    on_press: root.number_button_press(0)
+
+                Button:
+                    size_hint: (.2, .2)
+                    font_size: 25
+                    text: 'Right'
+                    background_color: (157/255, 157/255, 157/255, 1)
+                    on_press: root.rotation_button('R')
+
+                Button:
+                    size_hint: (.2, .2)
+                    font_size: 21
+                    text: 'Send Angle'
+                    background_color: (157/255, 157/255, 157/255, 1)
+                    color: (0, 1, 0, 1)
+                    on_press: root.send_msg(root, 'rotate')
+
+        BoxLayout:
+            orientation: 'vertical'
+            id: resultpath
+            Label:
+                padding_x: '10dp'
+                text_size: self.size
+                font_size: '25dp'
+                halign: 'left'
+                valign: 'top'
+                id: path
+                text: 'Path: '
+                color: '#deaaff'
+            Button:
+                size_hint: (1, 0.385)
+                background_color: (157/255, 157/255, 157/255, 1)
+                text: 'Reset Path'
+                on_press: root.reset_path(root)
+
+            Button:
+                size_hint: (1, 0.385)
+                background_color: (157/255, 157/255, 157/255, 1)
+                text: 'Start travelling!'
+                on_press: root.start_travelling(root)
+
+<ChoosePath>:
+    name: 'choosepath'
+
+    GridLayout:
+        cols: 1
+
+        Label:
+            text: 'Choose path using buttons below.'
+            size_hint: (1, None)
+            height: root.height/5
+            color: '#bdb2ff'
+
+        Calculator:
+
+        GridLayout:
+            cols: 1
+            size_hint: (1, None)
+            height: '100dp'
+            Button:
+                text: 'Go Back'
+                on_release:
+                    app.root.current = 'learnpath'
+                    root.manager.transition.direction = 'right'
+
+
+
+<AboutDonkey>:
+    name: 'aboutdonkey'
+    GridLayout:
+        cols: 1
+
+        GridLayout:
+            orientation: 'tb-lr'
+            cols: 2
+            rows: 2
+            Image:
+                source: 'about1.png'
+
+            Label:
+                text: 'Donkey is a robot which...'
+                font_size: '25dp'
+                text_size: self.size
+                halign: 'left'
+                valign: 'top'
+                padding_x: '10dp'
+                padding_y: '10dp'
+
+            Label:
+                text: '...'
+                font_size: '25dp'
+                text_size: self.size
+                halign: 'left'
+                valign: 'top'
+                padding_y: '10dp'
+
+
+        GridLayout:
+            cols: 1
+            size_hint: (1, 0.25)
+            #height: '200dp'
+            Button:
+                text: 'Go Back'
+                on_release:
+                    app.root.current = 'menu'
+                    root.manager.transition.direction = 'right'
+
+
