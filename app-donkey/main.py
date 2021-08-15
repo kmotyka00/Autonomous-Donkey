@@ -69,6 +69,8 @@ class Calculator(BoxLayout):
             final_path[i] = final_path[i][1:]
         print(final_path)
 
+        
+
 class WindowManager(ScreenManager):
     pass
 

@@ -3,3 +3,7 @@ TODO
 Start Travelling ma powodować wysyłanie wiadomości z Path
 Start travelling - obsłużyć wyjątki, reset path itp.
 Zrobić opis w about donkey
+
+Start travelling przenosi na osobny ekran, który liczy odległość przejechaną w %, pokazuje aktualny etap trasy
+
+Jak wklejać zdjęcia na buttona
