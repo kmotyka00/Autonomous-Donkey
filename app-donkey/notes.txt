@@ -1,0 +1,5 @@
+TODO
+
+Start Travelling ma powodować wysyłanie wiadomości z Path
+Start travelling - obsłużyć wyjątki, reset path itp.
+Zrobić opis w about donkey
