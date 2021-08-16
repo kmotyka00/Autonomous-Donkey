@@ -55,7 +55,20 @@ class MainWindow(Screen):
 
 
 class LearnPath(Screen):
-    pass
+    def send_velocity(self):
+        velocity = self.ids.my_slider.value
+
+        # setup client and broker
+        # mqttBroker = "192.168.1.113"
+        mqttBroker = "mqtt.eclipseprojects.io"
+        client = mqtt.Client("User")
+        client.connect(mqttBroker)
+
+        # send START command - it's necessaery due to
+        # design of functions in robot
+        command = "VEL=" + str(int(velocity))
+        client.publish("COMMANDS", command)
+        print(str(command) + " command has been send")
 
 class AboutDonkey(Screen):
     pass

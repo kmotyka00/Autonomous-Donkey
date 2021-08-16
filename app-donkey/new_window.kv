@@ -113,6 +113,8 @@ WindowManager:
 
             Button:
                 text: 'Go Next'
+                on_press:
+                    root.send_velocity()
                 on_release:
                     app.root.current = 'choosepath'
                     root.manager.transition.direction = 'left'

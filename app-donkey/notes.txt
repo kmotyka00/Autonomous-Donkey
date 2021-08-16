@@ -10,3 +10,4 @@ Jak wklejać zdjęcia na buttona
 Dopisać Button Stop Donkey od strony robota: (obsłużyć wysłaną wiadomość INTERRUPT_STOP),
 włączyć na całą jazdę mqtt,
 wysyłać cyklicznie wiadomości o ProgressBar
+Dopisać obsługę wiadomości VEL=20 od strony robota
