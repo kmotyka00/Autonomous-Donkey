@@ -45,6 +45,8 @@ class Donkey:
 
         self.deviation = 0
 
+        self.velocity = 50
+
         self.flags = {
             'LISTENING': True
         }
@@ -60,6 +62,9 @@ class Donkey:
 
             msg = message.payload.decode("utf-8")
 
+            if 'VEL' in msg:
+                self.velocity = msg.split('=')[1]
+
             if msg == 'START':
                 self.flags['LISTENING'] = True
                 self.user_input = list()
@@ -67,7 +72,7 @@ class Donkey:
             elif msg == 'STOP':
                 self.flags['LISTENING'] = False
                 print(self.user_input)
-                print('Bye!')
+                print('Stopped listening.')
 
             else:
                 if msg == 'R':
@@ -84,6 +89,7 @@ class Donkey:
             print("Received message: ", str(message.payload.decode("utf-8")))
 
         mqttBroker = "192.168.1.113"
+        # mqttBroker = "mqtt.eclipseprojects.io"
         client = mqtt.Client("Donkey")
         #client.username_pw_set("login", "pass")
         client.on_message = on_message
@@ -101,8 +107,11 @@ class Donkey:
         user_input = self.read_commands(ProgramState.START)
         self.preprocessing(user_input)
 
-    def traverse_path(self, speed=50):
-        
+    def traverse_path(self, speed=None):
+
+        if speed is None:
+            speed = self.velocity
+
         while len(self.trace) > 0 or len(self.angles) > 0:
             flag_different_course_correction = False
 
