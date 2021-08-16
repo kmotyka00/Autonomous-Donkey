@@ -3,6 +3,7 @@ WindowManager:
     LearnPath:
     AboutDonkey:
     ChoosePath:
+    Traversing:
 
 <Button>
     font_size: 32
@@ -283,6 +284,10 @@ WindowManager:
                 background_color: (157/255, 157/255, 157/255, 1)
                 text: 'Start travelling!'
                 on_press: root.start_travelling(root)
+                on_release:
+                    app.root.current = 'traversing'
+                    #root.manager.transition.direction = 'right'
+
 
 <ChoosePath>:
     name: 'choosepath'
@@ -309,6 +314,47 @@ WindowManager:
                     root.manager.transition.direction = 'right'
 
 
+<Traversing>:
+    name: 'traversing'
+
+    BoxLayout:
+        orientation: 'vertical'
+        size: root.width, root.height
+
+        Label:
+            text: 'The donkey is traversing the path.'
+            size_hint: (1, None)
+            height: root.height/5
+            color: '#bdb2ff'
+
+        Label:
+            id: progress_bar_text
+            text_size: self.size
+            font_size: '25dp'
+            halign: 'center'
+            valign: 'bottom'
+            color: '#deaaff'
+            text: '0% of path traversed.'
+
+        ProgressBar:
+            id: path_progress_bar
+            value: 0
+            min: 0
+            max: 1
+            pos_hint: {'x': .1}
+            size_hint_x: .8
+
+        BoxLayout:
+            orientation: 'horizontal'
+            Button:
+                text: 'Stop Donkey'
+                size_hint: (1, None)
+                height: root.height/5
+                on_press:
+                    root.stop_donkey()
+                on_release:
+                    app.root.current = 'menu'
+                    root.manager.transition.direction = 'right'
 
 <AboutDonkey>:
     name: 'aboutdonkey'

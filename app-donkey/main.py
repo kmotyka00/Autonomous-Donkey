@@ -71,7 +71,11 @@ class Calculator(BoxLayout):
         self.ids.calc_input.text = '0'
 
     def remove(self):
-        self.ids.calc_input.text = self.ids.calc_input.text[:-1]
+        if len(self.ids.calc_input.text) == 1:
+            self.ids.calc_input.text = '0'
+        else:
+            self.ids.calc_input.text = self.ids.calc_input.text[:-1]
+
 
     def rotation_button(self, angle):
         self.ids.calc_input.text = str(angle)
@@ -102,12 +106,25 @@ class Calculator(BoxLayout):
         split_and_send(final_path)
 
 
-
-
 class WindowManager(ScreenManager):
     pass
 
 
+class Traversing(Screen):
+    def stop_donkey(self):
+        self.ids.path_progress_bar.value = 0
+
+        # setup client and broker
+        # mqttBroker = "192.168.1.113"
+        mqttBroker = "mqtt.eclipseprojects.io"
+        client = mqtt.Client("User")
+        client.connect(mqttBroker)
+
+        # send START command - it's necessaery due to
+        # design of functions in robot
+        command = "INTERRUPT_STOP"
+        client.publish("COMMANDS", command)
+        print(str(command) + " command has been send")
 
 kv = Builder.load_file('new_window.kv')
 
