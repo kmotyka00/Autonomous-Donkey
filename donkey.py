@@ -48,7 +48,8 @@ class Donkey:
         self.velocity = 50
 
         self.flags = {
-            'LISTENING': True
+            'LISTENING': True,
+            'RUNNING': False
         }
 
     def listen(self):
@@ -109,6 +110,8 @@ class Donkey:
 
     def traverse_path(self, speed=None):
 
+        self.flags['RUNNING'] = True
+
         if speed is None:
             speed = self.velocity
 
@@ -156,6 +159,10 @@ class Donkey:
                     self.run(speed)
                 self.rotate(Rotation.LEFT)
                 self.deviation = 0
+
+        self.flags['RUNNING'] = False
+        self.flags['LISTENING'] = True
+        self.listen()
 
     def rotate(self, angle: Union[Rotation, int] = 90, speed=20):
         #TODO: na razie bierzemy średnicę jakąś losową, trzeba zmierzyć

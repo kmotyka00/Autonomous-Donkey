@@ -1,7 +1,8 @@
 WindowManager:
     MainWindow:
     LearnPath:
-    AboutDonkey:
+    AboutDonkey1:
+    AboutDonkey2:
     ChoosePath:
     Traversing:
 
@@ -54,7 +55,7 @@ WindowManager:
             Button:
                 text: 'About Donkey'
                 on_release:
-                    app.root.current = 'aboutdonkey'
+                    app.root.current = 'aboutdonkey1'
                     root.manager.transition.direction = 'left'
 
             Button:
@@ -358,35 +359,59 @@ WindowManager:
                     app.root.current = 'menu'
                     root.manager.transition.direction = 'right'
 
-<AboutDonkey>:
-    name: 'aboutdonkey'
+<AboutDonkey1>:
+    name: 'aboutdonkey1'
     GridLayout:
         cols: 1
 
         GridLayout:
-            orientation: 'tb-lr'
             cols: 2
-            rows: 2
-            Image:
-                source: 'about1.png'
 
-            Label:
-                text: 'Donkey is a robot which...'
-                font_size: '25dp'
-                text_size: self.size
-                halign: 'left'
-                valign: 'top'
-                padding_x: '10dp'
-                padding_y: '10dp'
+            BoxLayout:
+                orientation: 'vertical'
 
-            Label:
-                text: '...'
-                font_size: '25dp'
-                text_size: self.size
-                halign: 'left'
-                valign: 'top'
-                padding_y: '10dp'
+                Button:
+                    background_normal: 'about3.png'
+                    background_down: 'about3.png'
+                    on_release:
+                        app.root.current = 'aboutdonkey2'
+                        root.manager.transition.direction = 'left'
 
+                Label:
+                    text: "Donkey is an autonomous robot which traverses path from point A to point B using commands passed by you through this application. Donkey is smart so you don't need to worry about the obstacles, he will come over them on his own."
+
+                    color: '#bdb2ff'
+
+                    font_size: '25dp'
+                    text_size: self.size
+                    halign: 'left'
+                    valign: 'center'
+                    padding_x: '20dp'
+                    padding_y: '10dp'
+
+
+            BoxLayout:
+                orientation: 'vertical'
+
+                Label:
+                    text: 'Path should be passed to the Donkey as a sequence of the distances to travel and angles to rotate. Donkey will listen to your commands, next he will make all effort to process them and then he will start travelling with the velocity which you have chosen. If you need more information about how to use the application you can click on the donkey. It will navigate you to the next page. You can also visit your GitHub repository by clicking the button below.'
+                    color: '#bdb2ff'
+
+                    font_size: '25dp'
+                    text_size: self.size
+                    halign: 'left'
+                    valign: 'top'
+                    padding_x: '20dp'
+                    padding_y: '10dp'
+
+
+
+                Button:
+                    background_normal: 'Octocat.png'
+                    pos_hint: {'x': 0.5}
+                    size_hint: (0.4, 0.55)
+                    on_press:
+                        root.github_button()
 
         GridLayout:
             cols: 1
@@ -398,4 +423,18 @@ WindowManager:
                     app.root.current = 'menu'
                     root.manager.transition.direction = 'right'
 
+<AboutDonkey2>:
+    name: 'aboutdonkey2'
 
+    GridLayout:
+        cols: 1
+
+        GridLayout:
+            cols: 1
+            size_hint: (1, 0.25)
+            #height: '200dp'
+            Button:
+                text: 'Go Back'
+                on_release:
+                    app.root.current = 'aboutdonkey1'
+                    root.manager.transition.direction = 'right'

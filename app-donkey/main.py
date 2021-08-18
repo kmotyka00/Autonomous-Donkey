@@ -7,6 +7,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty
 import paho.mqtt.client as mqtt
+import webbrowser
 
 def split_and_send(final_path):
     print(final_path)
@@ -70,7 +71,11 @@ class LearnPath(Screen):
         client.publish("COMMANDS", command)
         print(str(command) + " command has been send")
 
-class AboutDonkey(Screen):
+class AboutDonkey1(Screen):
+    def github_button(self):
+        webbrowser.open('https://github.com/kmotyka00/Autonomous-Donkey')
+
+class AboutDonkey2(Screen):
     pass
 
 class ChoosePath(Screen):
