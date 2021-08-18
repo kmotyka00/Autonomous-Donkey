@@ -330,6 +330,36 @@ WindowManager:
             height: root.height/5
             color: '#bdb2ff'
 
+        BoxLayout:
+            orientation: 'horizontal'
+
+            Label:
+                text: 'Control the speed:'
+                size_hint: (1, None)
+                height: root.height/5
+                color: '#bdb2ff'
+
+            Slider:
+                id: speed_slider
+                min: 0
+                max: 100
+                value: 50
+                orientation: 'horizontal'
+                color: (1, 1, 1, 1)
+                on_touch_up: root.change_velocity()
+
+            Label:
+                text_size: self.size
+                text: str(int(speed_slider.value))
+                font_size: '25dp'
+                text_size: self.size
+                size_hint: (0.2, 0.2)
+                valign: 'center'
+                halign: 'center'
+                pos_hint: {'x': 1, 'y': 0.4}
+                color: '#bdb2ff'
+
+
         Label:
             id: progress_bar_text
             text_size: self.size

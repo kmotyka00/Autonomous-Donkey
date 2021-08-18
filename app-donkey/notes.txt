@@ -7,9 +7,13 @@ Start travelling przenosi na osobny ekran, który liczy odległość przejechan�
 Jak wklejać zdjęcia na buttona DONE
 
 
-Dopisać Button Stop Donkey od strony robota: (obsłużyć wysłaną wiadomość INTERRUPT_STOP),
+Dopisać Button Stop Donkey od strony robota: (obsłużyć wysłaną wiadomość INTERRUPT_STOP), DONE
 włączyć na całą jazdę mqtt,
 wysyłać cyklicznie wiadomości o ProgressBar
 Dopisać obsługę wiadomości VEL=20 od strony robota  DONE
 
 Zrobić dokładniejszą instrukcję w About Donkey 2
+
+Dorobić w widoku jak robot jedzie możliwość zmiany prędkości i wysyłanie wiadomości (od strony robota już jest)
+
+Zrobić żeby VEL nie wysyłała sie 2 razy i zmienić domyślną pozycję slidera

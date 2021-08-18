@@ -110,6 +110,34 @@ class Donkey:
 
     def traverse_path(self, speed=None):
 
+        # DOPISANE NA POTRZEBY PROGRESS BAR I INTERRUPT_STOP
+        def on_message(client, userdata, message):
+
+            msg = message.payload.decode("utf-8")
+
+            #MOŻNA ZOSTAWIC ZEBY MOC ZMIENIAC NA BIEZACO PREDKOSC
+
+            if 'VEL' in msg:
+                self.velocity = msg.split('=')[1]
+
+            if msg == 'INTERRUPT_STOP':
+                #Dzięki temu skończy się while loop i przejdzie w LISTENING
+                self.trace = list()
+                self.angles = list()
+
+            print("Received message: ", str(message.payload.decode("utf-8")))
+
+
+        mqttBroker = "192.168.1.113"
+        # mqttBroker = "mqtt.eclipseprojects.io"
+        client = mqtt.Client("Donkey")
+        # client.username_pw_set("login", "pass")
+        client.on_message = on_message
+        client.connect(mqttBroker)
+
+        client.loop_start()
+        client.subscribe("COMMANDS")
+
         self.flags['RUNNING'] = True
 
         if speed is None:
@@ -159,6 +187,9 @@ class Donkey:
                     self.run(speed)
                 self.rotate(Rotation.LEFT)
                 self.deviation = 0
+
+        # DOPISANE NA POTRZEBY PROGRESS BAR I INTERRUPT_STOP
+        client.loop_stop()
 
         self.flags['RUNNING'] = False
         self.flags['LISTENING'] = True
