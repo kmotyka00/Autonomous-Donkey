@@ -1,13 +1,15 @@
 TODO
 
-Zrobić opis w about donkey
+Zrobić opis w about donkey DONE
 
 Start travelling przenosi na osobny ekran, który liczy odległość przejechaną w %, pokazuje aktualny etap trasy
 
-Jak wklejać zdjęcia na buttona
+Jak wklejać zdjęcia na buttona DONE
 
 
 Dopisać Button Stop Donkey od strony robota: (obsłużyć wysłaną wiadomość INTERRUPT_STOP),
 włączyć na całą jazdę mqtt,
 wysyłać cyklicznie wiadomości o ProgressBar
 Dopisać obsługę wiadomości VEL=20 od strony robota  DONE
+
+Zrobić dokładniejszą instrukcję w About Donkey 2

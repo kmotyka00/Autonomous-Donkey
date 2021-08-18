@@ -13,17 +13,16 @@ def split_and_send(final_path):
     print(final_path)
     # Delete Path:
     final_path = final_path[6:]
-    print(type(final_path))
 
     # Change to list
     final_path = final_path.split(sep=',')
-    print(final_path)
-    final_path = final_path[:-1]
-    print(final_path)
 
+    #Delete last empty elem in list
+    final_path = final_path[:-1]
+
+    #Delete empty spaces in every elem in list
     for i in range(len(final_path)):
         final_path[i] = final_path[i][1:]
-    print(final_path)
 
     # setup client and broker
     # mqttBroker = "192.168.1.113"
