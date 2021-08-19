@@ -470,11 +470,23 @@ WindowManager:
             text: 'HOW TO PASS INSTRUCTIONS TO DONKEY'
 
             color: '#bdb2ff'
+            size_hint: (1, 0.12)
+            font_size: '30dp'
+            text_size: self.size
+            halign: 'center'
+            valign: 'top'
+            padding_x: '20dp'
+            padding_y: '20dp'
+
+        Label:
+            text: "1. Choose velocity which donkey should travel with.\n\n2. Using calculator choose path which donkey should traverse. To do this, if you want to choose line distance, you should set it using buttons or your keyboard and choose option 'SEND DIST'. If you want to send rotation angle, you can choose option 'Left' or 'Right' to rotate 90 degrees in both directions and finish operation with 'SEND ANGLE' button. You can also choose specific angle which should be in degrees.\n\n3. If you made any mistakes during inputting the data, you can reset path pressing 'RESET PATH' button.\n\n4. Now you can press 'START TRAVELLING!' button which will send your path to the robot.\n\n5. When robot is travelling you can stop him using 'STOP DONKEY' button. You can also control the speed of the Donkey using a Slider. Message will be sent to robot when your release a Slider. You can also find the information about how much have been already traversed on the progress bar at the bottom of the screen."
+
+            color: '#bdb2ff'
 
             font_size: '25dp'
             text_size: self.size
             halign: 'left'
-            valign: 'top'
+            valign: 'center'
             padding_x: '20dp'
             padding_y: '10dp'
 

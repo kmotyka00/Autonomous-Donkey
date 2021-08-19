@@ -1,20 +1,25 @@
-TODO
+DONE Zrobić opis w about donkey
 
-Zrobić opis w about donkey DONE
+DONE Ogarnąć jak wklejać zdjęcia na buttona
 
-Start travelling przenosi na osobny ekran, który liczy odległość przejechaną w %, pokazuje aktualny etap trasy
+DONE Dopisać Button Stop Donkey od strony robota: (obsłużyć wysłaną wiadomość INTERRUPT_STOP)
 
-Jak wklejać zdjęcia na buttona DONE
+DONE Dopisać obsługę wiadomości VEL=20 od strony robota
 
+DONE Zrobić dokładniejszą instrukcję w About Donkey 2
 
-Dopisać Button Stop Donkey od strony robota: (obsłużyć wysłaną wiadomość INTERRUPT_STOP), DONE
-włączyć na całą jazdę mqtt,
-wysyłać cyklicznie wiadomości o ProgressBar
-Dopisać obsługę wiadomości VEL=20 od strony robota  DONE
+DONE Dorobić w widoku jak robot jedzie możliwość zmiany prędkości i wysyłanie wiadomości
 
-Zrobić dokładniejszą instrukcję w About Donkey 2
+DONE Zrobić żeby VEL nie wysyłała sie 2 razy
 
-Dorobić w widoku jak robot jedzie możliwość zmiany prędkości i wysyłanie wiadomości (od strony robota już jest) DONE
+DONE zmienić domyślną pozycję slidera
 
-Zrobić żeby VEL nie wysyłała sie 2 razy  DONE ale nie do końca ładnie
-i zmienić domyślną pozycję slidera DONE
+DONE Powiązać ze sobą oba Slidery od prędkości z różnych screenów
+
+DONE włączyć na całą jazdę mqtt
+
+TODO wysyłać cyklicznie wiadomości o ProgressBar
+
+TODO liczenie odległości przejechanej w %
+
+TODO pokazywanie aktualnego etapu trasy
