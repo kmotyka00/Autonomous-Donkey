@@ -128,6 +128,10 @@ class WindowManager(ScreenManager):
 
 
 class Traversing(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.old_velocity = None
+
     def stop_donkey(self):
         self.ids.path_progress_bar.value = 0
 
@@ -144,23 +148,29 @@ class Traversing(Screen):
         print(str(command) + " command has been send")
 
     def change_velocity(self):
-        # setup client and broker
-        # mqttBroker = "192.168.1.113"
-        mqttBroker = "mqtt.eclipseprojects.io"
-        client = mqtt.Client("User")
-        client.connect(mqttBroker)
+        if self.old_velocity != str(int(self.ids.speed_slider.value)) or self.old_velocity is None:
+            self.old_velocity = str(int(self.ids.speed_slider.value))
 
-        # send START command - it's necessaery due to
-        # design of functions in robot
-        command = "VEL=" + str(int(self.ids.speed_slider.value))
-        client.publish("COMMANDS", command)
-        print(str(command) + " command has been send")
+            # setup client and broker
+            # mqttBroker = "192.168.1.113"
+            mqttBroker = "mqtt.eclipseprojects.io"
+            client = mqtt.Client("User")
+            client.connect(mqttBroker)
+
+            # send START command - it's necessaery due to
+            # design of functions in robot
+            command = "VEL=" + str(int(self.ids.speed_slider.value))
+            client.publish("COMMANDS", command)
+            print(str(command) + " command has been send")
+
 
 kv = Builder.load_file('new_window.kv')
+
 
 class AwesomeApp(App):
     def build(self):
         return kv
+
 
 if __name__ == '__main__':
     AwesomeApp().run()

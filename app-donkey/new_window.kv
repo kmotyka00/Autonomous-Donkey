@@ -101,6 +101,8 @@ WindowManager:
                     min: 0
                     max: 100
                     value: 50
+                    on_value:
+                        root.manager.get_screen('traversing').ids.speed_slider.value = int(self.value)
                     orientation: 'horizontal'
                     color: (1, 1, 1, 1)
                 Label:
@@ -174,6 +176,7 @@ WindowManager:
                     size_hint: (.2, .2)
                     font_size: 25
                     text: 'Clear'
+                    color: '#deaaff'
                     background_color: (157/255, 157/255, 157/255, 1)
                     on_press: root.clear()
 
@@ -203,6 +206,7 @@ WindowManager:
                     size_hint: (.2, .2)
                     font_size: 25
                     text: 'Back'
+                    color: '#deaaff'
                     background_color: (157/255, 157/255, 157/255, 1)
                     on_press: root.remove()
 
@@ -232,13 +236,14 @@ WindowManager:
                     font_size: 21
                     text: 'Send Dist'
                     background_color: (157/255, 157/255, 157/255, 1)
-                    color: (0, 1, 0, 1)
+                    color: '#f957bb'
                     on_press: root.send_msg(root, 'move')
 
                 Button:
                     size_hint: (.2, .2)
                     font_size: 25
                     text: 'Left'
+                    color: '#deaaff'
                     background_color: (157/255, 157/255, 157/255, 1)
                     on_press: root.rotation_button('L')
 
@@ -253,6 +258,7 @@ WindowManager:
                     size_hint: (.2, .2)
                     font_size: 25
                     text: 'Right'
+                    color: '#deaaff'
                     background_color: (157/255, 157/255, 157/255, 1)
                     on_press: root.rotation_button('R')
 
@@ -261,7 +267,7 @@ WindowManager:
                     font_size: 21
                     text: 'Send Angle'
                     background_color: (157/255, 157/255, 157/255, 1)
-                    color: (0, 1, 0, 1)
+                    color: '#f957bb'
                     on_press: root.send_msg(root, 'rotate')
 
         BoxLayout:
@@ -343,7 +349,8 @@ WindowManager:
                 id: speed_slider
                 min: 0
                 max: 100
-                value: 50
+                on_value:
+                    root.manager.get_screen('learnpath').ids.my_slider.value = int(self.value)
                 orientation: 'horizontal'
                 color: (1, 1, 1, 1)
                 on_touch_up: root.change_velocity()
@@ -458,6 +465,18 @@ WindowManager:
 
     GridLayout:
         cols: 1
+
+        Label:
+            text: 'HOW TO PASS INSTRUCTIONS TO DONKEY'
+
+            color: '#bdb2ff'
+
+            font_size: '25dp'
+            text_size: self.size
+            halign: 'left'
+            valign: 'top'
+            padding_x: '20dp'
+            padding_y: '10dp'
 
         GridLayout:
             cols: 1

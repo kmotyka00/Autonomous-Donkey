@@ -14,6 +14,7 @@ Dopisać obsługę wiadomości VEL=20 od strony robota  DONE
 
 Zrobić dokładniejszą instrukcję w About Donkey 2
 
-Dorobić w widoku jak robot jedzie możliwość zmiany prędkości i wysyłanie wiadomości (od strony robota już jest)
+Dorobić w widoku jak robot jedzie możliwość zmiany prędkości i wysyłanie wiadomości (od strony robota już jest) DONE
 
-Zrobić żeby VEL nie wysyłała sie 2 razy i zmienić domyślną pozycję slidera
+Zrobić żeby VEL nie wysyłała sie 2 razy  DONE ale nie do końca ładnie
+i zmienić domyślną pozycję slidera DONE
