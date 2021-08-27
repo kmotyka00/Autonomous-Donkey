@@ -50,6 +50,7 @@ WindowManager:
                 text: 'Default Path'
                 on_release:
                     root.travel_default_path(root)
+                    app.root.current = 'traversing'
 
 
             Button:
@@ -327,11 +328,20 @@ WindowManager:
     name: 'traversing'
 
     BoxLayout:
+        id: traversing_box_layout_main
         orientation: 'vertical'
         size: root.width, root.height
 
         Label:
+            id: traversing_label_1
             text: 'The donkey is traversing the path.'
+            size_hint: (1, None)
+            height: root.height/5
+            color: '#bdb2ff'
+
+        Label:
+            id: traversing_label_2
+            text: ''
             size_hint: (1, None)
             height: root.height/5
             color: '#bdb2ff'
@@ -396,6 +406,7 @@ WindowManager:
                     app.root.current = 'menu'
                     root.manager.transition.direction = 'right'
 
+
 <AboutDonkey1>:
     name: 'aboutdonkey1'
     GridLayout:
@@ -444,11 +455,24 @@ WindowManager:
 
 
                 Button:
-                    background_normal: 'GitHub-Mark-Light-120px-plus.png'
+                    id: github_button
+                    # background_normal: 'GitHub-Mark-Light-120px-plus.png'
+                    background_color: 0,0,0,0
                     pos_hint: {'x': 0.5, 'center_y': 0.8}
                     size_hint: (0.3, 0.3)
+
                     on_press:
-                        root.github_button()
+                        root.github_button_on()
+
+                    on_release:
+                        root.github_button_off()
+
+                    Image:
+                        id: github_button_img
+                        source: 'img/GitHub-Mark-Light-120px-plus.png'
+                        center_x: self.parent.center_x
+                        center_y: self.parent.center_y
+
 
         GridLayout:
             cols: 1

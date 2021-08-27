@@ -6,8 +6,10 @@ from kivy.uix.widget import Widget
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty
+import kivy.clock
 import paho.mqtt.client as mqtt
 import webbrowser
+import threading
 
 def split_and_send(final_path):
     print(final_path)
@@ -71,7 +73,11 @@ class LearnPath(Screen):
         print(str(command) + " command has been send")
 
 class AboutDonkey1(Screen):
-    def github_button(self):
+    def github_button_on(self):
+        self.ids.github_button_img.source = 'img/GitHub-Mark-Light-120px-plus_pressed.png'
+
+    def github_button_off(self):
+        self.ids.github_button_img.source = 'img/GitHub-Mark-Light-120px-plus.png'
         webbrowser.open('https://github.com/kmotyka00/Autonomous-Donkey')
 
 class AboutDonkey2(Screen):
@@ -131,6 +137,34 @@ class Traversing(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.old_velocity = None
+        self.current_dist = 0
+        self.current_trace = 1
+        self.travel_stage = "Start"
+        background_check = threading.Thread(target=self.check_donkey_state, daemon=True)
+        background_check.start()
+
+    def check_donkey_state(self):
+        def on_message(client, userdata, message):
+            msg = message.payload.decode("utf-8")
+            print("Received message")
+            if message.topic == "TRAVEL_STAGE":
+                self.current_trace = int(msg.split(": ")[1])
+                self.ids.traversing_label_2.text = "Current stage " + msg
+            if message.topic == "DISTANCE":
+                self.current_dist = int(msg)
+                self.ids.path_progress_bar.value = self.current_dist / self.current_trace
+                self.ids.progress_bar_text.text = str(self.ids.path_progress_bar.value * 100) + "% of path traversed."
+
+        # mqttBroker = "192.168.1.113"
+        mqttBroker = "mqtt.eclipseprojects.io"
+        client = mqtt.Client("UserInfo")
+        client.on_message = on_message
+        client.connect(mqttBroker)
+
+        print("Loading data...")
+        client.loop_start()
+        client.subscribe([("TRAVEL_STAGE", 1), ("DISTANCE", 1)])
+
 
     def stop_donkey(self):
         self.ids.path_progress_bar.value = 0

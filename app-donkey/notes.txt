@@ -18,8 +18,8 @@ DONE Powiązać ze sobą oba Slidery od prędkości z różnych screenów
 
 DONE włączyć na całą jazdę mqtt
 
-TODO wysyłać cyklicznie wiadomości o ProgressBar
+DONE wysyłać cyklicznie wiadomości o ProgressBar
 
-TODO liczenie odległości przejechanej w %
+DONE liczenie odległości przejechanej w %
 
-TODO pokazywanie aktualnego etapu trasy
+DONE pokazywanie aktualnego etapu trasy

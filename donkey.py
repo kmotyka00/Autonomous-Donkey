@@ -143,19 +143,27 @@ class Donkey:
         if speed is None:
             speed = self.velocity
 
+        client.publish("TRAVEL_STAGE", f"Travelling distance: {self.trace[0]}")
         while len(self.trace) > 0 or len(self.angles) > 0:
             flag_different_course_correction = False
 
             while self.transducer.get_distance(channel=SensorPosition.FRONT) > 30: #FIXME: CZY 30 cm na pewno?
+                client.publish("DISTANCE", self.left_motor.distance)
                 self.run(speed)
+                
                 if self.trace[0] < self.left_motor.distance:
                     self.trace.pop(0)
+                    client.publish("TRAVEL_STAGE", f"Rotating: {self.angles[0]}")
                     self.rotate(self.angles[0])
                     self.angles.pop(0)
+                    client.publish("TRAVEL_STAGE", f"Travelling distance: {self.trace[0]}")
+
 
             self.trace[0] -= self.left_motor.distance
             # zbędne, bo w while jest rotate
             # self.left_motor.reset_measurement()
+
+            client.publish("TRAVEL_STAGE", "Avoiding obstacle")
             while not (self.transducer.get_distance(channel=SensorPosition.FRONT) > 30):
                 self.stop()
                 time.sleep(2)
